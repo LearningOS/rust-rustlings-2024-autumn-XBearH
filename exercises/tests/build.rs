@@ -18,7 +18,7 @@ fn main() {
     // In tests8, we should enable "pass" feature to make the
     // testcase return early. Fill in the command to tell
     // Cargo about that.
-    //if std::env::var("ENABLE_PASS").is_ok() {
-    //    println!("cargo:rustc-cfg=pass");
-    //}
+    if std::env::var("ENABLE_PASS").is_ok() {
+        println!("cargo:rustc-cfg=pass");
+    }
 }
