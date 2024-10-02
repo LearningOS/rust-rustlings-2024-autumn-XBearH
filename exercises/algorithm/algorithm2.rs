@@ -3,7 +3,6 @@
 	This problem requires you to reverse a doubly linked list
 */
 
-
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
 
@@ -75,18 +74,25 @@ impl<T> LinkedList<T> {
 
     pub fn reverse(&mut self) {
         let mut current = self.start;
-        let mut temp: Option<NonNull<Node<T>>> = None;
+        let mut temp: Option<NonNull<Node<T>>>;
 
-        while let Some(curr_ptr) = current {
+        // 将 curr_ptr 声明为可变
+        while let Some(mut curr_ptr) = current {
             let curr = unsafe { curr_ptr.as_mut() };
 
+            // 交换 next 和 prev 指针
             temp = curr.prev;
             curr.prev = curr.next;
             curr.next = temp;
-            current = curr.prev; 
+
+            // 移动到下一个节点
+            current = curr.prev; // 现在 prev 是下一个节点的指针
         }
 
-        std::mem::swap(&mut self.start, &mut self.end);
+        // 重新设置 start 和 end
+        temp = self.start; // 保存旧的 start
+        self.start = self.end; // 反转 start 和 end
+        self.end = temp; // 将 end 设置为旧的 start
     }
 }
 

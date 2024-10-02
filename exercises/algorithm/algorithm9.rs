@@ -1,8 +1,8 @@
 /*
 	heap
 	This question requires you to implement a binary heap function
-*/
-// I AM NOT DONE
+*/ 
+
 
 use std::cmp::Ord;
 use std::default::Default;
@@ -37,7 +37,23 @@ where
     }
 
     pub fn add(&mut self, value: T) {
-        //TODO
+    
+        self.items.push(value);
+        self.count += 1;
+        self.bubble_up(self.count);
+    }
+
+    fn bubble_up(&mut self, idx: usize) {
+        let mut current = idx;
+        while current > 1 {
+            let parent = self.parent_idx(current);
+            if (self.comparator)(&self.items[current], &self.items[parent]) {
+                self.items.swap(current, parent);
+                current = parent;
+            } else {
+                break;
+            }
+        }
     }
 
     fn parent_idx(&self, idx: usize) -> usize {
@@ -57,8 +73,26 @@ where
     }
 
     fn smallest_child_idx(&self, idx: usize) -> usize {
-        //TODO
-		0
+        let left = self.left_child_idx(idx);
+        let right = self.right_child_idx(idx);
+        if right > self.count || (self.comparator)(&self.items[left], &self.items[right]) {
+            left
+        } else {
+            right
+        }
+    }
+
+    fn bubble_down(&mut self, idx: usize) {
+        let mut current = idx;
+        while self.children_present(current) {
+            let child = self.smallest_child_idx(current);
+            if (self.comparator)(&self.items[child], &self.items[current]) {
+                self.items.swap(current, child);
+                current = child;
+            } else {
+                break;
+            }
+        }
     }
 }
 
@@ -66,12 +100,12 @@ impl<T> Heap<T>
 where
     T: Default + Ord,
 {
-    /// Create a new MinHeap
+   
     pub fn new_min() -> Self {
         Self::new(|a, b| a < b)
     }
 
-    /// Create a new MaxHeap
+
     pub fn new_max() -> Self {
         Self::new(|a, b| a > b)
     }
@@ -79,13 +113,20 @@ where
 
 impl<T> Iterator for Heap<T>
 where
-    T: Default,
+    T: Default + Clone, 
 {
     type Item = T;
 
     fn next(&mut self) -> Option<T> {
-        //TODO
-		None
+        if self.is_empty() {
+            return None;
+        }
+        let top = self.items[1].clone(); 
+        
+        self.items.swap_remove(1);
+        self.count -= 1; 
+        self.bubble_down(1); 
+        Some(top) 
     }
 }
 
@@ -116,6 +157,7 @@ impl MaxHeap {
 #[cfg(test)]
 mod tests {
     use super::*;
+
     #[test]
     fn test_empty_heap() {
         let mut heap = MaxHeap::new::<i32>();
