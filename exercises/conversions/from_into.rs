@@ -7,6 +7,8 @@
 // Execute `rustlings hint from_into` or use the `hint` watch subcommand for a
 // hint.
 
+use std::str::FromStr;
+
 #[derive(Debug)]
 struct Person {
     name: String,
@@ -71,6 +73,8 @@ fn main() {
     println!("{:?}", p1);
     println!("{:?}", p2);
 }
+
+
 
 #[cfg(test)]
 mod tests {
